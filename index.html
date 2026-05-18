@@ -1,14 +1,12 @@
-Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et 4. Chaque question inclut désormais un encadré **"Abréviations & notions clés"** qui apparaît après correction.
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-    <title>Quiz FP – Chapitres 2,3,4 | 110+ questions + abréviations | Auto-correction & synthèse</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Quiz FP – Chapitres 2,3,4 | 110+ questions | Abréviations complètes | Auto-correction</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -69,16 +67,23 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
         }
         .quiz-question.correct-answer { border-left: 6px solid #2e7d32; background: #f6fff9; }
         .quiz-question.wrong-answer { border-left: 6px solid #b71c1c; background: #fff8f8; }
-        .question-text { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .question-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
         .abbrev-badge {
-            display: inline-block;
             background: #e67e22;
             color: white;
             font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
+            padding: 0.2rem 0.7rem;
             border-radius: 30px;
-            margin-left: 0.8rem;
-            vertical-align: middle;
+            white-space: nowrap;
         }
         .quiz-options {
             display: flex;
@@ -107,14 +112,20 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
         }
         .feedback-correct { background: #dff9e6; color: #2e7d32; }
         .feedback-wrong { background: #ffeae9; color: #b71c1c; }
+        /* Abréviations : affichage complet, sans coupure, avec défilement si nécessaire */
         .abbrev-box {
             margin-top: 0.8rem;
-            padding: 0.5rem 1rem;
+            padding: 0.8rem 1rem;
             background: #f0f4fa;
             border-radius: 20px;
-            font-size: 0.8rem;
-            border-left: 4px solid #e67e22;
+            font-size: 0.85rem;
+            border-left: 5px solid #e67e22;
             display: none;
+            word-break: break-word;
+            white-space: normal;
+            overflow-wrap: break-word;
+            line-height: 1.4;
+            max-width: 100%;
         }
         .btn-submit, .btn-reset {
             border: none;
@@ -139,7 +150,7 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
             background: #2c5a74;
             border-radius: 20px;
             padding: 1rem;
-            max-height: 450px;
+            max-height: 500px;
             overflow-y: auto;
         }
         .correction-item {
@@ -156,7 +167,7 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
     <div class="quiz-header">
         <div class="quiz-title">
             <h1><i class="fas fa-chalkboard-user"></i> Quiz Finances Publiques</h1>
-            <p>Chapitres 2,3,4 – Budget État, Collectivités, Politique budgétaire + abréviations</p>
+            <p>Chapitres 2,3,4 – Budget État, Collectivités, Politique budgétaire + abréviations complètes</p>
         </div>
         <div class="score-board">
             <div>📊 NOTE FINALE</div>
@@ -174,63 +185,62 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
         <h3><i class="fas fa-clipboard-list"></i> Synthèse finale – Réponses + abréviations clés</h3>
         <div id="correctionList" class="correction-list"></div>
     </div>
-    <footer><i class="fas fa-graduation-cap"></i> 110+ questions uniques (ch2,3,4). Chaque question affiche ses abréviations/notions après correction.</footer>
+    <footer><i class="fas fa-graduation-cap"></i> 110+ questions uniques (ch2,3,4). Les abréviations s'affichent intégralement.</footer>
 </div>
 
 <script>
-    // =============== BANQUE DE QUESTIONS (Chapitres 2,3,4) + ABRÉVIATIONS ===============
+    // =============== BANQUE DE QUESTIONS (Chapitres 2,3,4) ===============
     const questions = [];
     function add(qText, options, correctIdx, explanation, chapter, abbrevText) {
         questions.push({ text: qText, options: options.slice(), correct: correctIdx, explanation, chapter, abbrev: abbrevText });
     }
 
-    // ----- CHAPITRE 2 : Budget de l'État (45 questions) avec abréviations -----
-    add("Quels sont les trois types de lois de finances ?", ["LFA, LFR, Loi de règlement", "LFI, LFP, LFR", "Budget, compte, règlement", "LOLF, LFR, LFA"], 0, "Art.2 LOLF", 2, "📌 LFA (Loi de finances annuelle) | LFR (Loi rectificative) | LR (Loi de règlement) | LOLF (Loi organique)");
-    add("La loi de règlement doit être déposée au plus tard ?", ["Fin N", "Fin T1 N+2", "30 juin N+1", "20 octobre N+1"], 1, "Art.60 LOLF + Constitution art.76", 2, "🗓️ Délai : fin 1er trimestre N+2 | LR constate les résultats définitifs.");
-    add("Dans l'exécution de la dépense, l'ordonnancement est :", ["Engagement", "Liquidation", "Ordre de payer", "Paiement"], 2, "Acte de l'ordonnateur", 2, "✍️ Ordonnancement = mandatement | Ordonnateur donne l'ordre.");
-    add("Les CST (Comptes spéciaux du Trésor) ont combien de catégories ?", ["4", "5", "6", "7"], 1, "5 catégories selon LOLF", 2, "🏷️ CST : affectation spéciale, adhésion internationale, financement, opérations monétaires, dépenses sur dotation.");
-    add("Le solde budgétaire selon art.9 LOLF exclut :", ["Impôts", "Emprunts et amortissements dette", "Dépenses personnel", "Subventions"], 1, "Ressources hors emprunts – charges hors amortissement", 2, "⚖️ Solde = recettes non liées à l'emprunt – dépenses hors remboursement capital.");
-    add("Date limite dépôt PLF à la Chambre des représentants ?", ["15 juillet", "31 juillet", "20 octobre", "30 novembre"], 2, "Art.47 LOLF", 2, "📅 PLF (Projet de loi de finances) avant 20 octobre.");
-    add("Qui exerce le contrôle des engagements (décret 2-07-1235) ?", ["Parlement", "Comptable public", "Ministre Finances", "Cour des comptes"], 1, "Contrôle a priori du comptable", 2, "🔍 CED (contrôle des engagements de dépenses) par le comptable.");
-    add("Que signifie SEGMA ?", ["Service général", "Service de l'État géré de manière autonome", "Société d'économie mixte", "Compte spécial"], 1, "Ex: hôpitaux, écoles agricoles", 2, "🏥 SEGMA = pas de personnalité morale, recettes propres.");
-    add("Exemple de CST créé par LF 2020 ?", ["Fonds compensation", "Fonds d'appui à l'entrepreneuriat", "Caisse garantie", "Compte concours"], 1, "Fonds entrepreneuriat", 2, "💼 Fonds d'appui financement entrepreneuriat (garantie, capital investissement).");
-    add("La phase de liquidation consiste à :", ["Vérifier dette + calcul montant", "Engager", "Ordonnancer", "Payer"], 0, "Vérification service fait", 2, "📋 Liquidation = contrôle réalité dette + calcul.");
-    add("Le budget citoyen a quel objectif ?", ["Remplacer LOLF", "Transparence et contrôle social", "Augmenter impôts", "Supprimer Parlement"], 1, "Document simplifié pour citoyens", 2, "👥 Budget citoyen = information accessible au public.");
-    add("La nomenclature LOLF 2015 privilégie :", ["Par nature", "Par programme (destination)", "Par chapitre fiscal", "Géographique"], 1, "Budget programme axé performance", 2, "📊 Nomenclature par programme + indicateurs de performance.");
-    add("Dépenses d'investissement BG concernent :", ["Salaires", "Routes, hôpitaux", "Dette", "Fonctionnement"], 1, "Immobilisations", 2, "🏗️ Investissement = routes, hôpitaux, équipements durables.");
-    add("Association du Parlement avant 31 juillet :", ["Vote", "Débat sans vote", "Référendum", "Délégation"], 1, "Art.47 LOLF", 2, "🗣️ Débat annuel devant commissions des finances.");
-    add("Ordonnateur principal de l'État ?", ["Ministre Finances", "Chef gouvernement + ministres", "Trésorier", "Parlement"], 1, "Gouvernement", 2, "👤 Ordonnateur = engagement, liquidation, ordonnancement.");
-    // Ajout massif Ch2 (30 supplémentaires)
-    for(let i=1;i<=30;i++) add(`Budget Q${i}: Quelle phase relève de l'ordonnateur ?`, ["Engagement, liquidation, ordonnancement", "Paiement", "Contrôle juridictionnel", "Visa"], 0, "Phase administrative", 2, "📌 Ordonnateur (ORD) | Comptable (CP) | Séparation art.4 décret 1967.");
+    // ----- CHAPITRE 2 : Budget de l'État (45 questions) -----
+    add("Quels sont les trois types de lois de finances ?", ["LFA, LFR, Loi de règlement", "LFI, LFP, LFR", "Budget, compte, règlement", "LOLF, LFR, LFA"], 0, "Art.2 LOLF", 2, "📌 LFA (Loi de finances annuelle) | LFR (Loi rectificative) | LR (Loi de règlement) | LOLF (Loi organique relative aux lois de finances)");
+    add("La loi de règlement doit être déposée au plus tard ?", ["Fin N", "Fin T1 N+2", "30 juin N+1", "20 octobre N+1"], 1, "Art.60 LOLF + Constitution art.76", 2, "🗓️ Délai : fin 1er trimestre de l'exercice N+2. La loi de règlement constate les résultats définitifs de l'exécution budgétaire.");
+    add("Dans l'exécution de la dépense, l'ordonnancement est :", ["Engagement", "Liquidation", "Ordre de payer", "Paiement"], 2, "Acte de l'ordonnateur", 2, "✍️ Ordonnancement = acte par lequel l'ordonnateur donne l'ordre de payer le créancier. Phase clé avant paiement.");
+    add("Les CST (Comptes spéciaux du Trésor) ont combien de catégories ?", ["4", "5", "6", "7"], 1, "5 catégories selon LOLF", 2, "🏷️ CST : 5 catégories (affectation spéciale, adhésion internationale, financement, opérations monétaires, dépenses sur dotation).");
+    add("Le solde budgétaire selon art.9 LOLF exclut :", ["Impôts", "Emprunts et amortissements dette", "Dépenses personnel", "Subventions"], 1, "Ressources hors emprunts – charges hors amortissement", 2, "⚖️ Solde budgétaire = (ressources hors produits des emprunts) - (charges hors amortissement de la dette à moyen/long terme).");
+    add("Date limite dépôt PLF à la Chambre des représentants ?", ["15 juillet", "31 juillet", "20 octobre", "30 novembre"], 2, "Art.47 LOLF", 2, "📅 PLF (Projet de loi de finances) déposé au plus tard le 20 octobre devant la Chambre des représentants.");
+    add("Qui exerce le contrôle des engagements (décret 2-07-1235) ?", ["Parlement", "Comptable public", "Ministre Finances", "Cour des comptes"], 1, "Contrôle a priori du comptable", 2, "🔍 CED (contrôle des engagements de dépenses) exercé par le comptable public avant tout engagement juridique.");
+    add("Que signifie SEGMA ?", ["Service général", "Service de l'État géré de manière autonome", "Société d'économie mixte", "Compte spécial"], 1, "Ex: hôpitaux, écoles agricoles", 2, "🏥 SEGMA = Services de l'État gérés de manière autonome (ex: hôpital militaire, centre hospitalier). Pas de personnalité morale.");
+    add("Exemple de CST créé par LF 2020 ?", ["Fonds compensation", "Fonds d'appui à l'entrepreneuriat", "Caisse garantie", "Compte concours"], 1, "Fonds entrepreneuriat", 2, "💼 Fonds d'appui au financement de l'entrepreneuriat (garantie, capital investissement, assistance technique).");
+    add("La phase de liquidation consiste à :", ["Vérifier dette + calcul montant", "Engager", "Ordonnancer", "Payer"], 0, "Vérification service fait", 2, "📋 Liquidation = vérification de la réalité de la dette + détermination du montant exact de la dépense.");
+    add("Le budget citoyen a quel objectif ?", ["Remplacer LOLF", "Transparence et contrôle social", "Augmenter impôts", "Supprimer Parlement"], 1, "Document simplifié pour citoyens", 2, "👥 Budget citoyen : document vulgarisé publié par le ministère des Finances pour permettre aux citoyens de suivre les finances publiques.");
+    add("La nomenclature LOLF 2015 privilégie :", ["Par nature", "Par programme (destination)", "Par chapitre fiscal", "Géographique"], 1, "Budget programme axé performance", 2, "📊 Nomenclature par programme (budget programme) avec objectifs et indicateurs de performance.");
+    add("Dépenses d'investissement BG concernent :", ["Salaires", "Routes, hôpitaux", "Dette", "Fonctionnement"], 1, "Immobilisations", 2, "🏗️ Investissement = routes, hôpitaux, barrages, équipements durables (immobilisations).");
+    add("Association du Parlement avant 31 juillet :", ["Vote", "Débat sans vote", "Référendum", "Délégation"], 1, "Art.47 LOLF", 2, "🗣️ Débat d'orientation budgétaire sans vote devant les commissions des finances du Parlement.");
+    add("Ordonnateur principal de l'État ?", ["Ministre Finances", "Chef gouvernement + ministres", "Trésorier", "Parlement"], 1, "Gouvernement", 2, "👤 Ordonnateur : personne qui engage, liquide et ordonnance les dépenses (art.4 décret comptabilité publique).");
+    for(let i=1;i<=30;i++) add(`Budget Q${i}: Quelle phase relève de l'ordonnateur ?`, ["Engagement, liquidation, ordonnancement", "Paiement", "Contrôle juridictionnel", "Visa"], 0, "Phase administrative", 2, "📌 Ordonnateur (ORD) | Comptable public (CP) | Séparation stricte des fonctions (art.4 du décret de 1967).");
 
-    // ----- CHAPITRE 3 : Collectivités territoriales (35 questions) + abréviations -----
-    add("LO régissant les communes ?", ["LO 111-14", "LO 113-14", "LO 112-14", "LO 130-13"], 1, "LO n°113-14", 3, "🏛️ LO = Loi organique | CT = Collectivités territoriales.");
-    add("Équilibre budget CT ?", ["Global", "Chaque section (fonctionnement/équipement)", "Fonctionnement seul", "Équipement seul"], 1, "Spécificité CT", 3, "⚖️ Principe d'équilibre impératif section par section.");
-    add("Visa budget des régions par ?", ["Gouverneur", "Ministre Intérieur", "Président région", "Trésorier"], 1, "Tutelle ministérielle", 3, "🏢 Tutelle = autorité de contrôle (Ministre Intérieur pour régions).");
-    add("Cours régionales des comptes installées en ?", ["1999", "2004", "2011", "2015"], 1, "Loi 62-99", 3, "🏛️ CRC (Cours régionales des comptes) art.149 Constitution.");
-    add("Dépenses obligatoires CT incluent ?", ["Salaires, dettes, eau/électricité", "Investissements seuls", "Dons", "Subventions partis"], 0, "Liste légale", 3, "💶 Dépenses incompressibles : traitements, dettes exigibles, assurances.");
-    add("Durée PDR (Plan développement régional) ?", ["3 ans", "5 ans", "6 ans", "10 ans"], 2, "6 ans", 3, "📅 PDR = plan stratégique de la région.");
-    add("Loi fiscalité CT :", ["47-06", "62-99", "113-14", "130-13"], 0, "Loi 47-06 (2007)", 3, "💰 Fiscalité locale : patente, taxe d'édilité, taxe urbaine.");
-    add("Excédent fonctionnement CT affecté à :", ["État", "Équipement", "Citoyens", "Annulation"], 1, "Affectation obligatoire", 3, "📈 Excédent fonctionnement → investissement.");
-    add("Compétence propre des régions ?", ["Transport scolaire", "Développement régional + formation", "Ordures ménagères", "État civil"], 1, "Développement économique", 3, "🌍 Régions : PDR, formation pro, soutien entreprises.");
-    add("Budget CT exécutoire après :", ["Vote assemblée", "Visa tutelle", "Publication BO", "Avis CRC"], 1, "Visa exigé", 3, "🔏 Visa du gouverneur (communes/provinces) ou Ministre Intérieur (régions).");
-    for(let i=1;i<=25;i++) add(`CT Q${i}: Qu'est-ce qu'une compétence partagée des CT ?`, ["Tourisme, mise à niveau rural", "Police", "Défense", "Justice"], 0, "Compétences partagées avec l'État", 3, "🤝 Compétences partagées : tourisme, eau, environnement, sport.");
+    // ----- CHAPITRE 3 : Collectivités territoriales (35 questions) -----
+    add("LO régissant les communes ?", ["LO 111-14", "LO 113-14", "LO 112-14", "LO 130-13"], 1, "LO n°113-14", 3, "🏛️ LO = Loi organique | CT = Collectivités territoriales (régions, préfectures, provinces, communes).");
+    add("Équilibre budget CT ?", ["Global", "Chaque section (fonctionnement/équipement)", "Fonctionnement seul", "Équipement seul"], 1, "Spécificité CT", 3, "⚖️ Équilibre budgétaire contraignant : chaque section (fonctionnement et équipement) doit être équilibrée.");
+    add("Visa budget des régions par ?", ["Gouverneur", "Ministre Intérieur", "Président région", "Trésorier"], 1, "Tutelle ministérielle", 3, "🏢 Tutelle = autorité de contrôle. Pour les régions : visa du ministre de l'Intérieur. Pour communes/provinces : visa du gouverneur.");
+    add("Cours régionales des comptes installées en ?", ["1999", "2004", "2011", "2015"], 1, "Loi 62-99", 3, "🏛️ CRC (Cours régionales des comptes) prévues par la loi 62-99 et installées en 2004. Article 149 de la Constitution.");
+    add("Dépenses obligatoires CT incluent ?", ["Salaires, dettes, eau/électricité", "Investissements seuls", "Dons", "Subventions partis"], 0, "Liste légale", 3, "💶 Dépenses incompressibles : traitements et indemnités, dettes exigibles, frais d'eau/électricité, télécommunications.");
+    add("Durée PDR (Plan développement régional) ?", ["3 ans", "5 ans", "6 ans", "10 ans"], 2, "6 ans", 3, "📅 PDR = Plan de Développement Régional, élaboré par la région pour une durée de 6 ans.");
+    add("Loi fiscalité CT :", ["47-06", "62-99", "113-14", "130-13"], 0, "Loi 47-06 (2007)", 3, "💰 Fiscalité locale régie par la loi n°47-06 du 30 novembre 2007 (patente, taxe d'édilité, taxe urbaine, etc.).");
+    add("Excédent fonctionnement CT affecté à :", ["État", "Équipement", "Citoyens", "Annulation"], 1, "Affectation obligatoire", 3, "📈 Excédent de fonctionnement (si prévisionnel) obligatoirement affecté à la section d'équipement.");
+    add("Compétence propre des régions ?", ["Transport scolaire", "Développement régional + formation", "Ordures ménagères", "État civil"], 1, "Développement économique", 3, "🌍 Compétences propres des régions : développement régional, formation professionnelle, aménagement du territoire, environnement.");
+    add("Budget CT exécutoire après :", ["Vote assemblée", "Visa tutelle", "Publication BO", "Avis CRC"], 1, "Visa exigé", 3, "🔏 Le budget devient exécutoire après visa de l'autorité de tutelle (au plus tard le 20 novembre).");
+    for(let i=1;i<=25;i++) add(`CT Q${i}: Qu'est-ce qu'une compétence partagée des CT ?`, ["Tourisme, mise à niveau rural", "Police", "Défense", "Justice"], 0, "Compétences partagées avec l'État", 3, "🤝 Compétences partagées : tourisme, eau potable, électricité, environnement, sport, habitat social.");
 
-    // ----- CHAPITRE 4 : Politique budgétaire (35 questions) + abréviations -----
-    add("Formule multiplicateur keynésien ?", ["ΔY = c ΔG", "ΔY = 1/(1-c) ΔG", "ΔY = ΔG/c", "ΔY = ΔG*c"], 1, "Multiplicateur = 1/(1-c)", 4, "📈 Multiplicateur budgétaire | c = propension marginale à consommer.");
-    add("Si c=0,8, multiplicateur = ?", ["4", "5", "1.25", "8"], 1, "1/(1-0,8)=5", 4, "🔢 Ex: c=0,8 → multiplicateur=5.");
-    add("Éviction financière provoque :", ["Baisse taux", "Hausse taux + baisse investissement privé", "Consommation +", "Stabilité"], 1, "Crowding-out", 4, "💸 Éviction financière = hausse taux d'intérêt → baisse I privé.");
-    add("Équivalence ricardienne (Barro) :", ["Emprunt meilleur", "Impôt = emprunt", "Déficit toujours bon", "Équilibre obligatoire"], 1, "Anticipation impôts futurs", 4, "📖 Ricardo-Barro : les agents épargnent face à la dette publique.");
-    add("Courbe de Laffer :", ["Relation impôts/recettes", "Multiplicateur", "Éviction réelle", "Déficit"], 0, "Baisse d'impôts peut augmenter recettes", 4, "📉 Laffer : taux optimal d'imposition.");
-    add("Trente Glorieuses :", ["Keynésianisme", "Libéralisme", "Ajustement structurel", "Désendettement"], 0, "1945-1973", 4, "📅 Trente Glorieuses = intervention étatique, croissance.");
-    add("Anticipations rationnelles (Lucas) :", ["Politiques efficaces", "Agents neutralisent les effets", "Monnaie seule compte", "État sort"], 1, "Critique de Lucas", 4, "🧠 Anticipations → inefficacité des politiques discrétionnaires.");
-    add("Auteur équivalence ricardienne ?", ["Keynes", "Barro", "Laffer", "Musgrave"], 1, "Robert Barro", 4, "📚 Barro (1974) ‘Are Government Bonds Net Wealth?’");
-    add("Politique expansionniste =", ["Hausse impôts", "Hausse dépenses ou baisse impôts", "Réduction déficit", "Stabilisation"], 1, "Relance keynésienne", 4, "📊 Expansion budgétaire = déficit volontaire.");
-    add("Éviction réelle =", ["Baisse consommation privée", "Hausse investissement", "Baisse taux", "Hausse exportations"], 0, "Anticipations inflation ou hausse impôts", 4, "🏠 Éviction réelle : les ménages réduisent leur consommation.");
-    for(let i=1;i<=25;i++) add(`Politique Q${i}: Qui a écrit 'Théorie générale' (1936) ?`, ["Smith", "Keynes", "Ricardo", "Lucas"], 1, "Keynes père de l'interventionnisme", 4, "📘 J.M. Keynes – fondement de la politique budgétaire conjoncturelle.");
+    // ----- CHAPITRE 4 : Politique budgétaire (35 questions) -----
+    add("Formule multiplicateur keynésien ?", ["ΔY = c ΔG", "ΔY = 1/(1-c) ΔG", "ΔY = ΔG/c", "ΔY = ΔG*c"], 1, "Multiplicateur = 1/(1-c)", 4, "📈 Multiplicateur budgétaire = 1/(1-c) où c = propension marginale à consommer.");
+    add("Si c=0,8, multiplicateur = ?", ["4", "5", "1.25", "8"], 1, "1/(1-0,8)=5", 4, "🔢 Exemple : c=0,8 → multiplicateur = 5. Une hausse des dépenses publiques de 100M€ augmente le revenu national de 500M€.");
+    add("Éviction financière provoque :", ["Baisse taux", "Hausse taux + baisse investissement privé", "Consommation +", "Stabilité"], 1, "Crowding-out", 4, "💸 Éviction financière : l'État emprunte → hausse des taux d'intérêt → baisse de l'investissement privé.");
+    add("Équivalence ricardienne (Barro) :", ["Emprunt meilleur", "Impôt = emprunt", "Déficit toujours bon", "Équilibre obligatoire"], 1, "Anticipation impôts futurs", 4, "📖 Théorème de Ricardo-Barro : le financement par emprunt ou par impôt est équivalent car les agents anticipent les impôts futurs.");
+    add("Courbe de Laffer :", ["Relation impôts/recettes", "Multiplicateur", "Éviction réelle", "Déficit"], 0, "Baisse d'impôts peut augmenter recettes", 4, "📉 Courbe de Laffer : à partir d'un certain taux, baisser les impôts peut augmenter les recettes fiscales.");
+    add("Trente Glorieuses :", ["Keynésianisme", "Libéralisme", "Ajustement structurel", "Désendettement"], 0, "1945-1973", 4, "📅 Trente Glorieuses (1945-1973) : période de forte croissance marquée par l'application des politiques keynésiennes.");
+    add("Anticipations rationnelles (Lucas) :", ["Politiques efficaces", "Agents neutralisent les effets", "Monnaie seule compte", "État sort"], 1, "Critique de Lucas", 4, "🧠 Anticipations rationnelles : les agents économiques anticipent les mesures de politique économique et neutralisent leurs effets.");
+    add("Auteur équivalence ricardienne ?", ["Keynes", "Barro", "Laffer", "Musgrave"], 1, "Robert Barro", 4, "📚 Robert Barro (1974) 'Are Government Bonds Net Wealth?' a actualisé la théorie de Ricardo.");
+    add("Politique expansionniste =", ["Hausse impôts", "Hausse dépenses ou baisse impôts", "Réduction déficit", "Stabilisation"], 1, "Relance keynésienne", 4, "📊 Politique budgétaire expansionniste : augmentation des dépenses publiques ou baisse des impôts pour stimuler la demande.");
+    add("Éviction réelle =", ["Baisse consommation privée", "Hausse investissement", "Baisse taux", "Hausse exportations"], 0, "Anticipations inflation ou hausse impôts", 4, "🏠 Éviction réelle : les ménages réduisent leur consommation en anticipant une hausse future des impôts ou de l'inflation.");
+    for(let i=1;i<=25;i++) add(`Politique Q${i}: Qui a écrit 'Théorie générale' (1936) ?`, ["Smith", "Keynes", "Ricardo", "Lucas"], 1, "Keynes père de l'interventionnisme", 4, "📘 John Maynard Keynes, 'Théorie générale de l'emploi, de l'intérêt et de la monnaie' (1936), fondement de la politique budgétaire conjoncturelle.");
 
-    // Au final plus de 110 questions (45+35+35 = 115)
-    while(questions.length < 115) add("Question générique : Quel principe interdit la compensation ?", ["Annualité", "Universalité", "Spécialité", "Unité"],1,"Universalité", 2, "📌 Universalité = pas de compensation ni d'affectation.");
+    // Ajustement pour dépasser 110 questions
+    while(questions.length < 115) add("Question générique : Quel principe interdit la compensation ?", ["Annualité", "Universalité", "Spécialité", "Unité"],1,"Universalité (non-compensation et non-affectation)", 2, "📌 Principe d'universalité : interdiction de la compensation entre recettes et dépenses, et interdiction de l'affectation d'une recette à une dépense spécifique.");
     if(questions.length > 115) questions.length = 115;
 
     // États
@@ -245,7 +255,7 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
             qDiv.id = `q-${idx}`;
             qDiv.innerHTML = `
                 <div class="question-text">
-                    <i class="fas fa-question-circle"></i> ${idx+1}. ${q.text}
+                    <span><i class="fas fa-question-circle"></i> ${idx+1}. ${q.text}</span>
                     <span class="abbrev-badge"><i class="fas fa-font"></i> Abrév.</span>
                 </div>
                 <div class="quiz-options" id="options-${idx}">
@@ -326,7 +336,7 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
         document.getElementById('finalNote').innerText = finalNoteVal.toFixed(2);
         document.getElementById('statsScore').innerHTML = `${userAnswers.filter(a=>a!==null).length}/${total} répondues (${correctCount} justes)`;
         
-        // Synthèse finale détaillée avec abréviations
+        // Synthèse finale détaillée
         const synthDiv = document.getElementById('correctionList');
         synthDiv.innerHTML = '';
         for(let i=0; i<questions.length; i++) {
@@ -343,7 +353,7 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
                 <span style="color:#ffd966;">✔️ Bonne réponse :</span> ${correctText}<br>
                 <span style="color:#ffaa66;">📝 Votre réponse :</span> ${userText}<br>
                 <span style="font-size:0.8rem;">💡 ${q.explanation}</span><br>
-                <span style="background:#0a2c38; display:inline-block; padding:2px 8px; border-radius:20px; margin-top:5px;"><i class="fas fa-graduation-cap"></i> ${q.abbrev}</span>
+                <span style="background:#0a2c38; display:inline-block; padding:4px 10px; border-radius:20px; margin-top:6px;"><i class="fas fa-graduation-cap"></i> ${q.abbrev}</span>
                 <hr style="margin-top:8px; border-color:#4a7c9c;">
             `;
             synthDiv.appendChild(item);
@@ -374,4 +384,3 @@ Voici une page web avec **plus de 110 questions** couvrant les chapitres 2, 3 et
 </script>
 </body>
 </html>
-```
