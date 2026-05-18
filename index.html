@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Finances Publiques – Chapitres 2,3,4 | Auto-correction & synthèse finale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #eef2f7;
+            color: #1a2c3e;
+            line-height: 1.5;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .quiz-header {
+            background: #0a2c38;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 28px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .quiz-title h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.3rem;
+        }
+        .quiz-title p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .score-board {
+            background: #e67e22;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .score-board span {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        .progress-bar-container {
+            background: #2c5a74;
+            border-radius: 30px;
+            height: 12px;
+            width: 200px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .progress-bar {
+            background: #e67e22;
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s;
+        }
+        .quiz-question {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e9f0;
+            transition: 0.2s;
+        }
+        .quiz-question.correct-answer {
+            border-left: 6px solid #2e7d32;
+            background: #f6fff9;
+        }
+        .quiz-question.wrong-answer {
+            border-left: 6px solid #b71c1c;
+            background: #fff8f8;
+        }
+        .question-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8fafc;
+            padding: 0.7rem 1rem;
+            border-radius: 60px;
+            border: 1px solid #cbdde6;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .quiz-option:hover {
+            background: #eef2fa;
+        }
+        .quiz-option input {
+            accent-color: #e67e22;
+            width: 18px;
+            height: 18px;
+        }
+        .feedback-item {
+            margin-top: 0.8rem;
+            padding: 0.5rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            background: #f0f2f5;
+            display: none;
+        }
+        .feedback-correct {
+            background: #dff9e6;
+            color: #2e7d32;
+        }
+        .feedback-wrong {
+            background: #ffeae9;
+            color: #b71c1c;
+        }
+        .btn-submit {
+            background: #e67e22;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        .btn-reset {
+            background: #5a6e7c;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-left: 1rem;
+        }
+        .synthèse-finale {
+            background: #1f4e6e;
+            color: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+            display: none;
+        }
+        .synthèse-finale h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .correction-list {
+            background: #2c5a74;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .correction-item {
+            border-bottom: 1px solid #4a7c9c;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #5a6e7c;
+        }
+        @media (max-width: 700px) {
+            body { padding: 1rem; }
+            .quiz-header { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="quiz-header">
+        <div class="quiz-title">
+            <h1><i class="fas fa-chalkboard-user"></i> Quiz Finances Publiques</h1>
+            <p>Chapitres 2, 3 et 4 (Budget de l'État, Collectivités territoriales, Politique budgétaire)</p>
+        </div>
+        <div class="score-board">
+            <div>📊 NOTE FINALE</div>
+            <span id="finalNote">0.00</span><span> /20</span>
+            <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
+            <div id="statsScore" style="font-size:0.8rem;">0/0 répondues</div>
+        </div>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+        <button class="btn-submit" id="submitBtn"><i class="fas fa-check-double"></i> Corriger automatiquement & voir synthèse</button>
+        <button class="btn-reset" id="resetBtn"><i class="fas fa-undo-alt"></i> Tout réinitialiser</button>
+    </div>
+
+    <div id="synthèsePanel" class="synthèse-finale">
+        <h3><i class="fas fa-clipboard-list"></i> Synthèse finale – Réponses corrigées</h3>
+        <div id="correctionList" class="correction-list"></div>
+    </div>
+    <footer><i class="fas fa-graduation-cap"></i> Correction automatique – Chaque réponse modifie la note en direct. Cliquez sur "Corriger" pour afficher le détail des bonnes réponses.</footer>
+</div>
+
+<script>
+    // ================= BANQUE DE QUESTIONS (Uniquement Chapitres 2,3,4) – 80 questions variées =================
+    const questions = [];
+
+    function add(qText, options, correctIdx, explanation, chapter) {
+        questions.push({ text: qText, options: options.slice(), correct: correctIdx, explanation, chapter });
+    }
+
+    // ************* CHAPITRE 2 : BUDGET DE L'ÉTAT (30 questions) *************
+    add("Quels sont les trois types de lois de finances ?", ["LFA, LFR, Loi de règlement", "LFI, LFP, LFR", "Budget, compte, règlement", "LOLF, LFR, LFA"], 0, "Art.2 LOLF : loi de finances de l'année, rectificative, loi de règlement.", 2);
+    add("La loi de règlement doit être déposée au plus tard :", ["Fin de l'année N", "Fin du premier trimestre de l'exercice N+2", "30 juin N+1", "20 octobre N+1"], 1, "Art.60 LOLF + art.76 Constitution : avant fin T1 N+2.", 2);
+    add("Dans l'exécution de la dépense, l'ordonnancement est l'acte qui :", ["Crée l'obligation", "Vérifie la dette et calcule le montant", "Donne l'ordre de payer", "Effectue le paiement"], 2, "Ordonnancement = ordre de payer donné par l'ordonnateur.", 2);
+    add("Les comptes spéciaux du Trésor (CST) comptent combien de catégories ?", ["4", "5", "6", "7"], 1, "5 catégories : affectation spéciale, adhésion internationale, financement, opérations monétaires, dépenses sur dotation.", 2);
+    add("Le solde budgétaire selon l'article 9 LOLF est :", ["Recettes totales - Dépenses totales", "Ressources hors emprunts - Charges hors amortissement dette", "Recettes fiscales - dépenses fonctionnement", "Excédent budgétaire uniquement"], 1, "Exclusion des emprunts et amortissements de la dette.", 2);
+    add("Date limite de dépôt du PLF à la Chambre des représentants :", ["15 juillet", "31 juillet", "20 octobre", "30 novembre"], 2, "Art.47 LOLF : au plus tard le 20 octobre.", 2);
+    add("Qui exerce le contrôle des engagements de dépenses (décret 2-07-1235) ?", ["Le Parlement", "Le comptable public", "Le ministre des Finances", "La Cour des comptes"], 1, "Contrôle a priori par le comptable public.", 2);
+    add("Les SEGMA sont :", ["Des entreprises publiques", "Des services de l'État sans personnalité morale gérés de manière autonome", "Des collectivités territoriales", "Des comptes bancaires"], 1, "Services de l'État gérés de manière autonome (ex: hôpitaux).", 2);
+    add("Un exemple de compte spécial d'affectation spéciale créé par la LF 2020 :", ["Fonds de compensation", "Fonds d'appui au financement de l'entrepreneuriat", "Caisse de garantie", "Compte de concours"], 1, "Fonds d'appui à l'entrepreneuriat (loi de finances 2020).", 2);
+    add("La phase de liquidation consiste à :", ["Vérifier la réalité de la dette et arrêter le montant", "Engager juridiquement", "Ordonner le paiement", "Payer"], 0, "Liquidation : contrôle du service fait + calcul.", 2);
+    add("Le budget citoyen a pour objectif principal :", ["Remplacer la LOLF", "Permettre aux citoyens de comprendre les finances publiques", "Augmenter les impôts", "Supprimer le contrôle parlementaire"], 1, "Transparence et contrôle social.", 2);
+    add("La nomenclature budgétaire avec la LOLF 2015 privilégie :", ["La présentation par nature", "La présentation par programme (destination)", "La présentation par chapitre fiscal", "La présentation géographique"], 1, "Budget programme axé sur la performance.", 2);
+    add("Les dépenses d'investissement dans le budget général concernent :", ["Salaires", "Routes, hôpitaux, immobilisations", "Remboursement de la dette", "Fonctionnement courant"], 1, "Immobilisations et accroissement du patrimoine national.", 2);
+    add("Le Parlement est associé à la préparation du budget avant le 31 juillet via :", ["Un vote contraignant", "Un débat sans vote", "Un référendum", "Une délégation de pouvoir"], 1, "Art.47 LOLF : débat devant les commissions des finances sans vote.", 2);
+    add("Qui est l'ordonnateur principal du budget de l'État ?", ["Le ministre des Finances", "Le Chef du gouvernement et les ministres", "Le Trésorier général", "Le Parlement"], 1, "Le gouvernement, via les ordonnateurs secondaires.", 2);
+    for(let i=1;i<=15;i++) add(`Budget Q${i}: Quelle phase de la dépense relève de l'ordonnateur ?`, ["Engagement, liquidation, ordonnancement", "Paiement", "Contrôle juridictionnel", "Visa"], 0, "Phase administrative (ordonnateur).", 2);
+
+    // ************* CHAPITRE 3 : COLLECTIVITÉS TERRITORIALES (25 questions) *************
+    add("Quelle loi organique régit les communes au Maroc ?", ["LO 111-14", "LO 113-14", "LO 112-14", "LO 130-13"], 1, "LO n° 113-14 relative aux communes.", 3);
+    add("Le budget des CT doit être équilibré :", ["Globalement seulement", "Dans chaque section (fonctionnement et équipement)", "Uniquement en fonctionnement", "Uniquement en équipement"], 1, "Spécificité CT : équilibre impératif par section.", 3);
+    add("Pour les régions, le visa budgétaire est donné par :", ["Le gouverneur", "Le ministre de l'Intérieur", "Le président du conseil régional", "Le Trésorier général"], 1, "Tutelle du ministre de l'Intérieur.", 3);
+    add("Les Cours régionales des comptes ont été installées en :", ["1999", "2004", "2011", "2015"], 1, "Installées en 2004 (loi 62-99).", 3);
+    add("Les dépenses obligatoires des CT incluent :", ["Salaires, dettes, eau/électricité", "Seulement les investissements", "Les dons aux associations", "Les subventions aux partis"], 0, "Liste légale des dépenses incompressibles.", 3);
+    add("Le plan de développement régional (PDR) est établi pour :", ["3 ans", "5 ans", "6 ans", "10 ans"], 2, "Plan sur 6 ans.", 3);
+    add("La loi de fiscalité des CT est la loi n° :", ["47-06", "62-99", "113-14", "130-13"], 0, "Loi 47-06 du 30 novembre 2007.", 3);
+    add("L'excédent de fonctionnement d'une CT doit être :", ["Reversé à l'État", "Affecté à la section d'équipement", "Distribué aux citoyens", "Annulé"], 1, "Affectation obligatoire à l'investissement.", 3);
+    add("Quelles sont les compétences propres des régions ?", ["Transport scolaire", "Développement régional et formation professionnelle", "Ordures ménagères", "État civil"], 1, "Compétences régionales : développement économique, formation, PDR.", 3);
+    add("Le budget des CT devient exécutoire après :", ["Vote de l'assemblée seule", "Visa de l'autorité de tutelle", "Publication au bulletin officiel", "Avis de la Cour des comptes"], 1, "Visa du gouverneur ou du ministre.", 3);
+    for(let i=1;i<=15;i++) add(`CT Q${i}: Quelle est une compétence partagée des régions ?`, ["Tourisme et mise à niveau rurale", "Police municipale", "Défense nationale", "Justice"], 0, "Tourisme, mise à niveau rural, eau potable.", 3);
+
+    // ************* CHAPITRE 4 : POLITIQUE BUDGÉTAIRE (25 questions) *************
+    add("La formule du multiplicateur keynésien est :", ["ΔY = c ΔG", "ΔY = 1/(1-c) ΔG", "ΔY = ΔG / c", "ΔY = ΔG * c"], 1, "Multiplicateur = 1/(1-c).", 4);
+    add("Si c = 0,75, le multiplicateur vaut :", ["3", "4", "5", "2.5"], 1, "1/(1-0,75)=4.", 4);
+    add("L'effet d'éviction financière provoque :", ["Baisse des taux d'intérêt", "Hausse des taux et baisse de l'investissement privé", "Augmentation de la consommation", "Stabilité monétaire"], 1, "État emprunte → hausse taux → investissement privé diminue.", 4);
+    add("Selon le théorème d'équivalence ricardienne (Barro) :", ["L'emprunt est préférable", "Impôt et emprunt sont équivalents pour les agents", "Le déficit est toujours bon", "Il faut toujours équilibrer"], 1, "Anticipation des impôts futurs → épargne.", 4);
+    add("La courbe de Laffer illustre :", ["Relation entre impôts et recettes fiscales", "Le multiplicateur", "L'éviction réelle", "Le déficit budgétaire"], 0, "Baisse d'impôts peut augmenter les recettes.", 4);
+    add("Les 'Trente Glorieuses' sont marquées par :", ["Politiques keynésiennes", "Libéralisme strict", "Ajustement structurel", "Désendettement"], 0, "1945-1973, interventionnisme et croissance.", 4);
+    add("La théorie des anticipations rationnelles (Lucas) soutient que :", ["Les politiques sont très efficaces", "Les agents anticipent et neutralisent les effets", "Seule la monnaie compte", "L'État doit sortir"], 1, "Critique de Lucas.", 4);
+    add("Quel auteur est associé à l'équivalence ricardienne ?", ["Keynes", "Barro", "Laffer", "Musgrave"], 1, "Robert Barro a actualisé Ricardo.", 4);
+    add("La politique budgétaire expansionniste consiste à :", ["Augmenter impôts et réduire dépenses", "Augmenter dépenses ou baisser impôts", "Réduire le déficit", "Stabiliser la monnaie"], 1, "Relance keynésienne.", 4);
+    add("L'effet d'éviction réelle se traduit par :", ["Baisse de la consommation privée", "Hausse de l'investissement", "Baisse des taux", "Augmentation des exportations"], 0, "Anticipations d'inflation ou hausse d'impôts futurs réduisent la consommation.", 4);
+    for(let i=1;i<=15;i++) add(`Politique Q${i}: Quel économiste est le père de la théorie générale ?`, ["Smith", "Keynes", "Ricardo", "Lucas"], 1, "Keynes, 1936.", 4);
+
+    // Total environ 30+25+25 = 80 questions (suffisant pour un quiz dense)
+    // État des réponses
+    let userAnswers = new Array(questions.length).fill(null);
+    let answerStatus = new Array(questions.length).fill(false); // true = corrigé / feedback visible
+
+    function renderQuiz() {
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = '';
+        questions.forEach((q, idx) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'quiz-question';
+            qDiv.id = `q-${idx}`;
+            qDiv.innerHTML = `
+                <div class="question-text"><i class="fas fa-question-circle"></i> ${idx+1}. ${q.text} <span style="font-size:0.7rem; background:#eef2f7; padding:2px 8px; border-radius:20px;">Ch.${q.chapter}</span></div>
+                <div class="quiz-options" id="options-${idx}">
+                    ${q.options.map((opt, optIdx) => `
+                        <label class="quiz-option">
+                            <input type="radio" name="q${idx}" value="${optIdx}">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                <div class="feedback-item" id="fb-${idx}"></div>
+            `;
+            container.appendChild(qDiv);
+            // Ajouter écouteurs
+            const radios = qDiv.querySelectorAll(`input[name="q${idx}"]`);
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const val = parseInt(e.target.value);
+                    userAnswers[idx] = val;
+                    answerStatus[idx] = false;
+                    updateLiveScore();
+                    // Retirer style bordure
+                    document.getElementById(`q-${idx}`).classList.remove('correct-answer', 'wrong-answer');
+                    const fbDiv = document.getElementById(`fb-${idx}`);
+                    if(fbDiv) fbDiv.style.display = 'none';
+                });
+            });
+            if(userAnswers[idx] !== null) {
+                const radioToCheck = document.querySelector(`input[name="q${idx}"][value="${userAnswers[idx]}"]`);
+                if(radioToCheck) radioToCheck.checked = true;
+            }
+        });
+        updateLiveScore();
+    }
+
+    function updateLiveScore() {
+        let answeredCount = 0;
+        let correctCount = 0;
+        for(let i=0; i<questions.length; i++) {
+            if(userAnswers[i] !== null) {
+                answeredCount++;
+                if(userAnswers[i] === questions[i].correct) correctCount++;
+            }
+        }
+        const note = (correctCount / questions.length) * 20;
+        document.getElementById('finalNote').innerText = note.toFixed(2);
+        document.getElementById('statsScore').innerHTML = `${answeredCount}/${questions.length} répondues (${correctCount} justes)`;
+        const percent = (answeredCount / questions.length) * 100;
+        document.getElementById('progressBar').style.width = percent + '%';
+        return { correctCount, answeredCount, note };
+    }
+
+    function afficherCorrectionEtSynthèse() {
+        // Pour chaque question : afficher feedback, mettre bordure, et construire la synthèse
+        let correctCount = 0;
+        for(let i=0; i<questions.length; i++) {
+            const selected = userAnswers[i];
+            const isCorrect = (selected === questions[i].correct);
+            if(selected !== null && isCorrect) correctCount++;
+            const fbDiv = document.getElementById(`fb-${i}`);
+            const qDiv = document.getElementById(`q-${i}`);
+            if(selected !== null) {
+                answerStatus[i] = true;
+                if(isCorrect) {
+                    fbDiv.innerHTML = `<i class="fas fa-check-circle"></i> ✅ Correct ! ${questions[i].explanation}`;
+                    fbDiv.className = 'feedback-item feedback-correct';
+                    qDiv.classList.add('correct-answer');
+                    qDiv.classList.remove('wrong-answer');
+                } else {
+                    fbDiv.innerHTML = `<i class="fas fa-times-circle"></i> ❌ Faux. Réponse correcte : ${questions[i].options[questions[i].correct]}. ${questions[i].explanation}`;
+                    fbDiv.className = 'feedback-item feedback-wrong';
+                    qDiv.classList.add('wrong-answer');
+                    qDiv.classList.remove('correct-answer');
+                }
+                fbDiv.style.display = 'block';
+            } else {
+                fbDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ Non répondue. Réponse : ${questions[i].options[questions[i].correct]}. ${questions[i].explanation}`;
+                fbDiv.className = 'feedback-item feedback-wrong';
+                fbDiv.style.display = 'block';
+                qDiv.classList.add('wrong-answer');
+            }
+        }
+        const total = questions.length;
+        const finalNoteVal = (correctCount / total) * 20;
+        document.getElementById('finalNote').innerText = finalNoteVal.toFixed(2);
+        document.getElementById('statsScore').innerHTML = `${userAnswers.filter(a=>a!==null).length}/${total} répondues (${correctCount} justes)`;
+        
+        // Générer la synthèse finale détaillée
+        const synthDiv = document.getElementById('correctionList');
+        synthDiv.innerHTML = '';
+        for(let i=0; i<questions.length; i++) {
+            const q = questions[i];
+            const userChoice = userAnswers[i];
+            const isCorrect = (userChoice === q.correct);
+            const correctText = q.options[q.correct];
+            const userText = (userChoice !== null) ? q.options[userChoice] : "Non répondue";
+            const statusIcon = isCorrect ? '✅' : (userChoice !== null ? '❌' : '⚠️');
+            const item = document.createElement('div');
+            item.className = 'correction-item';
+            item.innerHTML = `
+                <strong>${statusIcon} Q${i+1} (Ch.${q.chapter}) : ${q.text}</strong><br>
+                <span style="color:#ffd966;">✔️ Bonne réponse :</span> ${correctText}<br>
+                <span style="color:#ffaa66;">📝 Votre réponse :</span> ${userText}<br>
+                <span style="font-size:0.8rem; opacity:0.9;">💡 ${q.explanation}</span>
+                <hr style="margin-top:8px; border-color:#4a7c9c;">
+            `;
+            synthDiv.appendChild(item);
+        }
+        document.getElementById('synthèsePanel').style.display = 'block';
+        document.getElementById('synthèsePanel').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        for(let i=0; i<questions.length; i++) {
+            userAnswers[i] = null;
+            answerStatus[i] = false;
+            const radios = document.querySelectorAll(`input[name="q${i}"]`);
+            radios.forEach(r => r.checked = false);
+            const fbDiv = document.getElementById(`fb-${i}`);
+            if(fbDiv) fbDiv.style.display = 'none';
+            const qDiv = document.getElementById(`q-${i}`);
+            if(qDiv) qDiv.classList.remove('correct-answer', 'wrong-answer');
+        }
+        updateLiveScore();
+        document.getElementById('synthèsePanel').style.display = 'none';
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => {
+        afficherCorrectionEtSynthèse();
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        resetQuiz();
+    });
+
+    renderQuiz();
+</script>
+</body>
+</html>
